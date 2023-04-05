@@ -26,5 +26,6 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     email_id TEXT PRIMARY KEY
+    name_of_user TEXT
     pass_key TEXT 
 )
