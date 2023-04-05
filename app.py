@@ -67,7 +67,6 @@ def trending():
 @app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
-    comments = getComments(postId)
     if request.method == 'POST':
         content = request.form['content']
         if not content:
@@ -77,7 +76,8 @@ def viewPost(postId):
             conn.execute('INSERT into comments (post_id, content) VALUES (?, ?)', (postId, content))
             conn.commit()
             conn.close()
-            
+            redirect(url_for('home'))
+    comments = getComments(postId)
     return render_template('blogpost.html', posts=post, comments=comments)
 
 @app.route('/create', methods=('GET', 'POST'))
