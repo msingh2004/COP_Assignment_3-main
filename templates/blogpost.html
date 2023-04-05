@@ -25,10 +25,10 @@ Blogpost
           <div class="card bg-secondary text-white" data-bs-theme = "dark">
           <div class="card-body">
 
-        <form>
+        <form method="post">
         <div class="mb-3">
           <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
-          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here">
+          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content" value="{{ request.form['content']}}"></input>
         </div>
         <button type="submit" class="btn btn-primary mb-1">Submit</button>
       </form>
