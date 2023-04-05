@@ -1,6 +1,11 @@
 import sqlite3
+import re
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
+
+def regex(expr, item):
+    reg = re.compile(expr)
+    return reg.search(item)
 
 
 def get_db_connection():
@@ -26,12 +31,18 @@ def getComments(postId):
 
 def getResults(keyword):
     # keyword is a string
+
     conn = get_db_connection()
-    results = conn.execute('SELECT * FROM posts WHERE title = ?', (keyword,)).fetchall()
+    conn.create_function("REGEXP", 2, regex)
+    results = conn.execute('SELECT * FROM posts').fetchall()
     conn.close()
+    results_act = []
+    for result in results:
+        if keyword in result['title']:
+            results_act.append(result)
     if getResults is None:
         return {}
-    return results
+    return results_act
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
