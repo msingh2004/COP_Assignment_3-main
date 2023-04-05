@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block body %}
+
+    <center>
+    <div>
+        <h3 class = "text-white mt-5">Explore more</h3>
+    </div>
+
+    <div class="input-group mt-3" style="width:50%">
+        <input type="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-outline-primary">search</button>
+      </div>
+
+
+    <div>
+        <h3 class = "text-white mt-5">Explore by categories</h3>
+    </div>  
+
+    <div class="dropdown mt-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Choose a category to browse
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Category 1</a></li>
+          <li><a class="dropdown-item" href="#">Category 2</a></li>
+          <li><a class="dropdown-item" href="#">Category 3</a></li>
+        </ul>
+      </div>
+
+    </center>
+
+{% endblock %}
