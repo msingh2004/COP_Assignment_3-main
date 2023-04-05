@@ -19,6 +19,23 @@ Blogpost
         </div>
 
         <div><h3 class = "text-white mx-5">Comments</h3></div>
+
+
+        <div class="p-2 bg-dark text-white mx-5" data-bs-theme="dark">
+          <div class="card bg-secondary text-white" data-bs-theme = "dark">
+          <div class="card-body">
+
+        <form>
+        <div class="mb-3">
+          <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
+          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here">
+        </div>
+        <button type="submit" class="btn btn-primary mb-1">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
         {%for comment in comments%}
         <div class="p-2 bg-dark text-white mx-5" data-bs-theme="dark">
             <div class="card bg-secondary text-white" data-bs-theme = "dark">
