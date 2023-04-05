@@ -24,6 +24,15 @@ def getComments(postId):
         return {}
     return comments
 
+def getResults(keyword):
+    # keyword is a string
+    conn = get_db_connection()
+    results = conn.execute('SELECT * FROM posts WHERE title = ?', (keyword,)).fetchall()
+    conn.close()
+    if getResults is None:
+        return {}
+    return results
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 # blogs = [{'author' : 'Nice', 'title' : 'Blog1', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog2', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"}
@@ -48,17 +57,22 @@ def login():
 def signup():
     return render_template('signup.html')
 
-@app.route('/search')
+@app.route('/search', methods=('GET', 'POST'))
 def search():
-    return render_template('search.html')
+    if request.method == 'POST':
+        keyword = request.form['keyword']
+        results = getResults(keyword)
+        return render_template('searchresults.html', results=results)
+    else:
+        return render_template('search.html')
 
 @app.route('/byauthor')
 def byauthor():
     return render_template('byauthor.html')
 
-@app.route('/searchresults')
-def searchresults():
-    return render_template('searchresults.html')
+# @app.route('/searchresults')
+# def searchresults():
+#     return render_template('searchresults.html')
 
 @app.route('/trending')
 def trending():

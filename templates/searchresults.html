@@ -11,7 +11,7 @@ Search Results
       </div>
     </center>
 
-      <div class="d-grid gap-3">
+      <!-- <div class="d-grid gap-3">
         <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
             <div class="card bg-secondary text-white" data-bs-theme = "dark">
       
@@ -43,6 +43,20 @@ Search Results
               <a href="#" class="btn btn-primary">Read full post</a>
             </div>
           </div></div>
-      </div>
+      </div> -->
+
+      {%for result in results%}
+      <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
+        <div class="card bg-secondary text-white" data-bs-theme = "dark">
+  
+            <div class="card-body">
+              <h3 class="card-title">{{result.title}}</h3>
+              <h6> Author </h6>
+              <!-- <p class="card-text">{{result.content}}</p> -->
+              <a href="{{result.id}}" class="btn btn-primary">Read full post</a>
+            </div>
+          </div>
+    </div>
+    {%endfor%}
 
       {% endblock %}
