@@ -18,14 +18,13 @@ CREATE TABLE comments (
 
 DROP TABLE IF EXISTS email_ids_subscriptions;
 
-CREATE TABLE email_ids (
-    email_ids_subscriptions TEXT PRIMARY KEY
-)
+CREATE TABLE email_ids_subscriptions (
+    email_id TEXT PRIMARY KEY
+);
 
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     email_id TEXT PRIMARY KEY
-    name_of_user TEXT
     pass_key TEXT 
-)
+);
