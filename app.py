@@ -64,10 +64,20 @@ def searchresults():
 def trending():
     return render_template('trending.html')
 
-@app.route('/<int:postId>')
+@app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
     comments = getComments(postId)
+    if request.method == 'POST':
+        content = request.form['content']
+        if not content:
+            flash('Can\'t put empty comment')
+        else:
+            conn = get_db_connection()
+            conn.execute('INSERT into comments (post_id, content) VALUES (?, ?)', (postId, content))
+            conn.commit()
+            conn.close()
+            
     return render_template('blogpost.html', posts=post, comments=comments)
 
 @app.route('/create', methods=('GET', 'POST'))
@@ -85,6 +95,8 @@ def create():
             conn.close()
             
     return render_template('newpost.html')
+
+
 
 
 if __name__ == "__main__":
