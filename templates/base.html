@@ -28,14 +28,21 @@
                 alt="Avatar" /> -->
 
               <!-- <a href="">My Profile</a> -->
-
+              {%if session['username']%}
               <div class="btn-group mx-5">
-                <a href="/login" class="btn btn-primary">Login</a>
-                <a href="/signup" class="btn btn-primary">Signup</a>
+                <!-- <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/signup" class="btn btn-primary">Signup</a> -->
                 <a href="/profile" class="btn btn-primary">My Profile</a>
                 <a href="#" class="btn btn-primary">Logout</a>
               </div>
-              
+              {%else%}
+              <div class="btn-group mx-5">
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/signup" class="btn btn-primary">Signup</a>
+                <!-- <a href="/profile" class="btn btn-primary">My Profile</a>
+                <a href="#" class="btn btn-primary">Logout</a> -->
+              </div>
+              {%endif%}
             </form>
 
             </div>
