@@ -111,7 +111,13 @@ def create():
     return render_template('newpost.html')
 
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
 
+@app.route('/following')
+def following():
+    return render_template('following.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
