@@ -12,8 +12,15 @@
         
         <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-circle mb-3" style="width: 150px;"
         alt="Avatar" />
-        
-        <h5 class="mb-2 text-white"><strong>John Doe</strong></h5>
+        {%if session['username']%}
+        <h5 class="mb-2 text-white"><strong>
+        {{session['username']}}
+        </strong></h5>
+        {%else%}
+        <h5 class="mb-2 text-white"><strong>
+          John Doe
+          </strong></h5>
+        {%endif%}
         <p class="text-white">Web designer</p>
       </center>
 

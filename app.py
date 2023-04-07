@@ -56,11 +56,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 def home():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
-    users = conn.execute('SELECT * FROM users').fetchall()
     conn.close()
-    if not session.get("name"):
-        return redirect('/login')
-    return render_template('index.html',posts=posts, users=users)
+    return render_template('index.html',posts=posts)
 
 # @app.route('/blogpost')
 # def blogpost():  
@@ -129,14 +126,16 @@ def create():
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    session["username"] = None
     if request.method == 'POST':
-        session["name"] = request.form["username"]
-        session["password"] = request.form["password"]
+        
         conn = get_db_connection()
         user = conn.execute('SELECT * FROM users WHERE username = ? and pass_key = ?', (request.form["username"], request.form["password"])).fetchone()
         conn.close()
         if user is not None:
             if user['username'] == request.form["username"] and user['pass_key'] == request.form["password"]:
+                session["username"] = request.form["username"]
+                session["password"] = request.form["password"]
                 flash("logged in successfully")
                 return redirect(url_for('home'))
             else:
