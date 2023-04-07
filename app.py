@@ -1,6 +1,7 @@
 import sqlite3
 import re
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, session
+from flask_session import Session
 from werkzeug.exceptions import abort
 
 def regex(expr, item):
@@ -46,6 +47,8 @@ def getResults(keyword):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 # blogs = [{'author' : 'Nice', 'title' : 'Blog1', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog2', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog3', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"},{'author' : 'Nice', 'title' : 'Blog', 'text' : "hello"}
 # ]
          
@@ -53,20 +56,23 @@ app.config['SECRET_KEY'] = 'your secret key'
 def home():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
+    users = conn.execute('SELECT * FROM users').fetchall()
     conn.close()
-    return render_template('index.html',posts=posts)
+    if not session.get("name"):
+        return redirect('/login')
+    return render_template('index.html',posts=posts, users=users)
 
 # @app.route('/blogpost')
 # def blogpost():  
 #     return render_template('blogpost.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+# @app.route('/login')
+# def login():
+#     return render_template('login.html')
 
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+# @app.route('/signup')
+# def signup():
+#     return render_template('signup.html')
 
 @app.route('/search', methods=('GET', 'POST'))
 def search():
@@ -121,6 +127,40 @@ def create():
             
     return render_template('newpost.html')
 
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.method == 'POST':
+        session["name"] = request.form["username"]
+        session["password"] = request.form["password"]
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM users WHERE username = ? and pass_key = ?', (request.form["username"], request.form["password"])).fetchone()
+        conn.close()
+        if user is not None:
+            if user['username'] == request.form["username"] and user['pass_key'] == request.form["password"]:
+                flash("logged in successfully")
+                return redirect(url_for('home'))
+            else:
+                flash("Incorrect username or password")
+                return redirect(url_for('login'))
+        else:
+            flash("Incorrect username or password")
+            return redirect(url_for('login'))
+    else:
+        flash("hello")
+        return render_template('login.html')
+        
+@app.route('/signup', methods=('GET', 'POST'))
+def signup():
+    if request.method == 'POST':
+        username = request.form["username"]
+        password = request.form["password"]
+        conn = get_db_connection()
+        conn.execute('INSERT INTO users (username, pass_key) VALUES (?, ?)', (username, password))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('login'))
+    else:
+        return render_template('signup.html')
 
 @app.route('/profile')
 def profile():
