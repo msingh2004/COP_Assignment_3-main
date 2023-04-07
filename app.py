@@ -56,10 +56,11 @@ app.config["SESSION_TYPE"] = "filesystem"
 def home():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
+    users = conn.execute('SELECT * FROM users').fetchall()
     conn.close()
     if not session.get("name"):
         return redirect('/login')
-    return render_template('index.html',posts=posts)
+    return render_template('index.html',posts=posts, users=users)
 
 # @app.route('/blogpost')
 # def blogpost():  
@@ -126,7 +127,6 @@ def create():
             
     return render_template('newpost.html')
 
-<<<<<<< HEAD
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -156,11 +156,11 @@ def signup():
         password = request.form["password"]
         conn = get_db_connection()
         conn.execute('INSERT INTO users (username, pass_key) VALUES (?, ?)', (username, password))
+        conn.commit()
         conn.close()
         return redirect(url_for('login'))
     else:
         return render_template('signup.html')
-=======
 
 @app.route('/profile')
 def profile():
@@ -169,7 +169,6 @@ def profile():
 @app.route('/following')
 def following():
     return render_template('following.html')
->>>>>>> 30fc9ef8d298e9b6afbaf0ef4ffcbbee8a60729b
 
 if __name__ == "__main__":
     app.run(debug=True)
