@@ -1,21 +1,27 @@
 import sqlite3
-import re
+# from flask_sqlalchemy import SQLAlchemy
+# import 
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
 
-def regex(expr, item):
-    reg = re.compile(expr)
-    return reg.search(item)
+import pymysql
+
+# Connect to the database
+
 
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+    connection = pymysql.connect(host='localhost',
+        user='root', 
+        password = "SQL@0304#",
+        db='db1',)
+    # conn.row_factory = pymysql.Row
+    return connection.cursor()
 
 def getPost(postId):
     conn = get_db_connection()
-    post = conn.execute('SELECT * FROM posts WHERE id = ?', (postId,)).fetchone()
+    conn.execute('SELECT * FROM posts WHERE postId = %s', (postId,))
+    post = conn.fetchone()
     conn.close()
     if post is None:
         abort(404)
@@ -23,26 +29,12 @@ def getPost(postId):
 
 def getComments(postId):
     conn = get_db_connection()
-    comments = conn.execute('SELECT * FROM comments WHERE post_id = ?', (postId,)).fetchall()
+    conn.execute('SELECT * FROM comments WHERE post_id = %s', (postId,))
+    comments = conn.fetchall()
     conn.close()
     if comments is None:
         return {}
     return comments
-
-def getResults(keyword):
-    # keyword is a string
-
-    conn = get_db_connection()
-    conn.create_function("REGEXP", 2, regex)
-    results = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    results_act = []
-    for result in results:
-        if keyword in result['title']:
-            results_act.append(result)
-    if getResults is None:
-        return {}
-    return results_act
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -52,7 +44,9 @@ app.config['SECRET_KEY'] = 'your secret key'
 @app.route('/')
 def home():
     conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
+    conn.execute('SELECT * FROM posts')
+    posts = conn.fetchall()
+    print(posts[0][0])
     conn.close()
     return render_template('index.html',posts=posts)
 
@@ -68,22 +62,17 @@ def login():
 def signup():
     return render_template('signup.html')
 
-@app.route('/search', methods=('GET', 'POST'))
+@app.route('/search')
 def search():
-    if request.method == 'POST':
-        keyword = request.form['keyword']
-        results = getResults(keyword)
-        return render_template('searchresults.html', results=results)
-    else:
-        return render_template('search.html')
+    return render_template('search.html')
 
 @app.route('/byauthor')
 def byauthor():
     return render_template('byauthor.html')
 
-# @app.route('/searchresults')
-# def searchresults():
-#     return render_template('searchresults.html')
+@app.route('/searchresults')
+def searchresults():
+    return render_template('searchresults.html')
 
 @app.route('/trending')
 def trending():
@@ -98,7 +87,7 @@ def viewPost(postId):
             flash('Can\'t put empty comment')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT into comments (post_id, content) VALUES (?, ?)', (postId, content))
+            conn.execute('INSERT into comments (post_id, content) VALUES (%s, %s)', (postId, content))
             conn.commit()
             conn.close()
             redirect(url_for('home'))
@@ -115,20 +104,14 @@ def create():
             flash('Title is necessary')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)', (title, content))
+            conn.execute('INSERT INTO posts (topic, content) VALUES (%s, %s)', (title, content))
             conn.commit()
             conn.close()
             
     return render_template('newpost.html')
 
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
 
-@app.route('/following')
-def following():
-    return render_template('following.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

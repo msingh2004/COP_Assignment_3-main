@@ -1,0 +1,44 @@
+import pymysql
+connection = pymysql.connect(host='localhost',
+        user='root', 
+        password = "SQL@0304#",
+        db='db1',)
+
+cur = connection.cursor()
+# with open('schema.sql') as f:
+#     cur.execute(f.read())
+cur.execute("DROP TABLE IF EXISTS posts")
+cur.execute("CREATE TABLE posts(postId TEXT,gender TEXT NOT NULL,age TEXT NOT NULL,topic TEXT NOT NULL,sign TEXT NOT NULL,dat TEXT NOT NULL,content TEXT NOT NULL)")
+cur.execute("DROP TABLE IF EXISTS comments")
+cur.execute("CREATE TABLE comments (comment_id INTEGER PRIMARY KEY ,created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,post_id INTEGER NOT NULL,content TEXT NOT NULL)")
+cur.execute("DROP TABLE IF EXISTS email_ids_subscriptions")
+# cur.execute("CREATE TABLE email_ids_subscriptions (email_id TEXT PRIMARY KEY)")
+cur.execute("DROP TABLE IF EXISTS users")
+cur.execute("CREATE TABLE users (userid varchar(350) PRIMARY KEY,screen_name TEXT,tags TEXT,avatar TEXT,followers_count INTEGER,friends_count INTEGER,lang TEXT)")
+with open('postvalues.csv','r') as file:
+    postcount = 0
+    # cur.execute("INSERT INTO posts VALUES (?,?,?,?,?,?,?)",file[0].split(","))
+    for row in file:
+        cur.execute("INSERT INTO posts VALUES (%s,%s,%s,%s,%s,%s,%s)",tuple(row.split(",")[0:7]))
+        connection.commit()
+        postcount+=1
+
+with open('uservalues.csv','r') as file:
+    usercount = 0
+    for row in file:
+        cur.execute("INSERT INTO users VALUES (%s,%s,%s,%s,%s,%s,%s)",tuple(row.split(",")[0:7]))
+        connection.commit()
+        usercount+=1
+    
+
+# cur.execute("INSERT INTO posts (id, title, content) VALUES (?, ?, ?)", 
+            # ('1', 'First', 'Neil'))
+
+# cur.execute("INSERT INTO posts (id, title, content) VALUES (?, ?, ?)",
+            # ('2', 'Second Post', 'Buzz Aldrin'))
+
+# cur.execute("INSERT INTO comments (comment_id, post_id, content) VALUES (?, ?, ?)",
+            # ('1', '1', 'I\'ll be fucked up if you can\'t be right here'))
+
+connection.commit()
+connection.close()
