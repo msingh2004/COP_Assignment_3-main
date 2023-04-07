@@ -126,6 +126,7 @@ def create():
             
     return render_template('newpost.html')
 
+<<<<<<< HEAD
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -159,6 +160,16 @@ def signup():
         return redirect(url_for('login'))
     else:
         return render_template('signup.html')
+=======
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
+@app.route('/following')
+def following():
+    return render_template('following.html')
+>>>>>>> 30fc9ef8d298e9b6afbaf0ef4ffcbbee8a60729b
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -15,13 +15,41 @@
                 <!-- <img src="logo.png" alt="logo" width="200" height="130" class="d-inline-block align-text-top"> -->
                 <img src="{{ url_for('static', filename='logo.png') }}" width="200" height="130" class="d-inline-block align-text-top" />
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            </button> -->
+
+            <form class="d-flex">
+              <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+              <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+            
+
+              <!-- <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 15%; height:15%;"
+                alt="Avatar" /> -->
+
+              <!-- <a href="">My Profile</a> -->
+
+              <div class="btn-group mx-5">
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/signup" class="btn btn-primary">Signup</a>
+                <a href="/profile" class="btn btn-primary">My Profile</a>
+              </div>
+
+                
+
+
+                
+            </form>
+
             </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
         </div>
         </nav>
+
+
+
+
+
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark sticky-top fs-5"  data-bs-theme="dark">
     <div class="container-fluid">
@@ -40,7 +68,7 @@
             <a class="nav-link active" aria-current="page" href="/trending">Trending</a>
             </li>         
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Following</a>
+            <a class="nav-link active" aria-current="page" href="/following">Following</a>
             </li>    
         </ul>
         </div>
