@@ -143,7 +143,7 @@ def login():
                 session["username"] = request.form["username"]
                 session["password"] = request.form["password"]
                 IS_SESSION = True
-                flash("logged in successfully")
+                flash("Logged in successfully")
                 return redirect(url_for('home'))
             else:
                 flash("Incorrect username or password")
@@ -152,7 +152,6 @@ def login():
             flash("Incorrect username or password")
             return redirect(url_for('login'))
     else:
-        flash("hello")
         return render_template('login.html')
         
 @app.route('/signup', methods=('GET', 'POST'))

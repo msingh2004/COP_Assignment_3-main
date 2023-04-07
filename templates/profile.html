@@ -6,6 +6,16 @@
 
 {% block body %}
 
+
+{% for message in get_flashed_messages() %}
+<center>
+<div class="alert alert-warning alert-dismissible fade show mt-3 mx-3" role="alert" style="width:40%;">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</center>
+{% endfor %}
+
     <center>
         <h3 class = "text-white mt-5 mb-5">Hello User!</h3>
         
