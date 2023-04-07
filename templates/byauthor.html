@@ -13,7 +13,7 @@
           <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-circle mb-3" style="width: 150px;"
           alt="Avatar" />
           
-          <h5 class="mb-2 text-white"><strong>John Doe</strong></h5>
+          <h5 class="mb-2 text-white"><strong>{{username}}</strong></h5>
           <p class="text-white">Web designer</p>
         </div>
 
@@ -23,39 +23,21 @@
         <h2>Blogs by the Author</h2>
       </div>
     </center>
-
+    {%for blog in blogs%}
       <div class="d-grid gap-3">
         <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
             <div class="card bg-secondary text-white" data-bs-theme = "dark">
       
                 <div class="card-body">
-                  <h3 class="card-title">Blog Title</h3>
-                  <h6> Author </h6>
-                  <p class="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum....</p>
-                  <a href="#" class="btn btn-primary">Read full post</a>
+                  <h3 class="card-title">{{blog.title}}</h3>
+                  <h6> {{blog.author}} </h6>
+                  <p class="card-text">{{blog.content}}</p>
+                  <a href="{{blog.id}}" class="btn btn-primary">Read full post</a>
                 </div>
               </div>
         </div>
-        <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
-            <div class="card bg-secondary text-white" data-bs-theme = "dark">
       
-                <div class="card-body">
-                  <h3 class="card-title">Blog Title</h3>
-                  <h6> Author </h6>
-                  <p class="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum....</p>
-                  <a href="#" class="btn btn-primary">Read full post</a>
-                </div>
-              </div>
-        </div>
-        <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark"><div class="card bg-secondary text-white" data-bs-theme = "dark">
-      
-            <div class="card-body">
-              <h3 class="card-title">Blog Title</h3>
-              <h6> Author </h6>
-              <p class="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum....</p>
-              <a href="#" class="btn btn-primary">Read full post</a>
-            </div>
-          </div></div>
+        
       </div>
-
+      {%endfor%}
 {% endblock %}

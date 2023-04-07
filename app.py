@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, url_for, flash, redirect, ses
 from flask_session import Session
 from werkzeug.exceptions import abort
 
+IS_SESSION = False
+
 def regex(expr, item):
     reg = re.compile(expr)
     return reg.search(item)
@@ -80,10 +82,11 @@ def search():
     else:
         return render_template('search.html')
 
-@app.route('/byauthor')
-def byauthor():
-    return render_template('byauthor.html')
-
+@app.route('/<string:username>')
+def byauthor(username):
+    conn = get_db_connection()
+    blogs = conn.execute('SELECT * FROM posts WHERE author = ?', (username,)).fetchall()
+    return render_template('byauthor.html', username=username, blogs=blogs)
 # @app.route('/searchresults')
 # def searchresults():
 #     return render_template('searchresults.html')
@@ -101,7 +104,8 @@ def viewPost(postId):
             flash('Can\'t put empty comment')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT into comments (post_id, content) VALUES (?, ?)', (postId, content))
+            author = session['username']
+            conn.execute('INSERT into comments (post_id, content, author) VALUES (?, ?, ?)', (postId, content, author))
             conn.commit()
             conn.close()
             redirect(url_for('home'))
@@ -113,15 +117,17 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-
+        
+        author = session['username']
         if not title:
             flash('Title is necessary')
+            return redirect('/create')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)', (title, content))
+            conn.execute('INSERT INTO posts (title, content, author) VALUES (?, ?, ?)', (title, content, author))
             conn.commit()
             conn.close()
-            
+            return redirect('/')
     return render_template('newpost.html')
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -136,6 +142,7 @@ def login():
             if user['username'] == request.form["username"] and user['pass_key'] == request.form["password"]:
                 session["username"] = request.form["username"]
                 session["password"] = request.form["password"]
+                IS_SESSION = True
                 flash("logged in successfully")
                 return redirect(url_for('home'))
             else:

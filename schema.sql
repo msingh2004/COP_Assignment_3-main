@@ -4,7 +4,8 @@ CREATE TABLE posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     title TEXT NOT NULL,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    author TEXT NOT NULL
 );
 
 DROP TABLE IF EXISTS comments;
@@ -13,7 +14,8 @@ CREATE TABLE comments (
     comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     post_id INTEGER NOT NULL,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    author
 );
 
 DROP TABLE IF EXISTS email_ids_subscriptions;

@@ -12,7 +12,7 @@ Blogpost
       
                 <div class="card-body">
                   <h2 class="card-title">{{posts.title}}</h2>
-                  <h5> Author </h5>
+                  <h5> {{posts.author}} </h5>
                   <p class="card-text">{{posts.content}}</p>
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-link">Upvote (21)</button>
@@ -31,14 +31,21 @@ Blogpost
         <div class="p-2 bg-dark text-white mx-5" data-bs-theme="dark">
           <div class="card bg-secondary text-white" data-bs-theme = "dark">
           <div class="card-body">
-
+        {%if session['username']%}
         <form method="post">
         <div class="mb-3">
           <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
           <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content"></input>
         </div>
         <button type="submit" class="btn btn-primary mb-1">Submit</button>
-      </form>
+        </form>
+        {%else%}
+        <div class="mb-3">
+          <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
+          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content"></input>
+        </div>
+        <button onclick="location.href='/login'" type="submit" class="btn btn-primary mb-1">Submit</button>
+        {%endif%}
     </div>
   </div>
 </div>
@@ -48,7 +55,7 @@ Blogpost
             <div class="card bg-secondary text-white" data-bs-theme = "dark">
       
                 <div class="card-body">
-                  <h5> Comment author </h5>
+                  <h5> {{comment.author}}  </h5>
                   <p class="card-text">{{comment.content}}</p>
 
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
