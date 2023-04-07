@@ -18,7 +18,10 @@ Blogpost
                     <button type="button" class="btn btn-link">Upvote (21)</button>
                     <button type="button" class="btn btn-link">Downvote (12)</button>
                     <button type="button" class="btn btn-link">Follow</button>
+                    {%if session['username'] and session['username'] == posts.author%}
                     <button type="button" class="btn btn-link">Delete post</button>
+                    {%else%}
+                    {%endif%}
                   </div>
                 </div>
               </div>
@@ -57,10 +60,14 @@ Blogpost
                 <div class="card-body">
                   <h5> {{comment.author}}  </h5>
                   <p class="card-text">{{comment.content}}</p>
-
+                  {%if session['username'] and session['username'] == comment.author%}
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    
                     <button type="button" class="btn btn-link">Delete comment</button>
+
                   </div>
+                  {%else%}
+                  {%endif%}
 
 
                 </div>
