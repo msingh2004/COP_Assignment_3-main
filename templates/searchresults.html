@@ -20,10 +20,19 @@ Search Results
               <h6> Author </h6>
               <!-- <p class="card-text">{{result.content}}</p> -->
               <a href="{{result.id}}" class="btn btn-primary">Read full post</a>
+              <br>
+
+              <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-link">Upvote (21)</button>
+                <button type="button" class="btn btn-link">Downvote (12)</button>
+                <button type="button" class="btn btn-link">Follow</button>
+                <button type="button" class="btn btn-link">Delete post</button>
+              </div>
+
             </div>
           </div>
     </div>
-    
+
     {%endfor%}
 
       {% endblock %}
