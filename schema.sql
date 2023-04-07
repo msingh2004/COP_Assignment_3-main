@@ -25,6 +25,6 @@ CREATE TABLE email_ids_subscriptions (
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-    email_id TEXT PRIMARY KEY
+    username TEXT PRIMARY KEY,
     pass_key TEXT 
 );
