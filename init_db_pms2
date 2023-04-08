@@ -32,12 +32,26 @@ cur.execute("CREATE TABLE users (username varchar(255) PRIMARY KEY,pass_key TEXT
     
 cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
             ('Author1', 'FirstNeil'))
+cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
+            ('Leo', 'FirstNeil2'))
+cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
+            ('Aquarius', 'FirstNeil3'))
 
 cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s,%s)", 
             ('1', 'First', 'Neil','Author1'))
 
 cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s, %s)",
             ('2', 'Second Post', 'Buzz Aldrin','Author1'))
+
+with open('postvalues.csv','r') as file:
+    postcount = 0
+    # cur.execute("INSERT INTO posts VALUES (?,?,?,?,?,?,?)",file[0].split(","))
+    i = 3
+    for row in file:
+        cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s,%s)",tuple([i,row.split(",")[3],row.split(",")[6],row.split(",")[4]]))
+        connection.commit()
+        postcount+=1
+        i+=1
 
 cur.execute("INSERT INTO comments (comment_id, post_id, content,author) VALUES (%s, %s,%s,%s)",
             ('1', '1', 'I\'ll be fucked up if you can\'t be right here','Author1'))

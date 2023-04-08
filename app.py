@@ -3,49 +3,79 @@ import re
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask_session import Session
 from werkzeug.exceptions import abort
+import pymysql
+from beackendtest import *
+# IS_SESSION = False
 
-IS_SESSION = False
-
-def regex(expr, item):
-    reg = re.compile(expr)
-    return reg.search(item)
+# def regex(expr, item):
+#     reg = re.compile(expr)
+#     return reg.search(item)
 
 
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# def get_db_connection():
+#     connection = pymysql.connect(host='localhost',
+#         user='root', 
+#         password = "SQL@0304#",
+#         db='db1',)
+#     # conn.row_factory = pymysql.Row
+#     return connection.cursor()
 
-def getPost(postId):
-    conn = get_db_connection()
-    post = conn.execute('SELECT * FROM posts WHERE id = ?', (postId,)).fetchone()
-    conn.close()
-    if post is None:
-        abort(404)
-    return post
+# def get_db_connection2():
+#     connection = pymysql.connect(host='localhost',
+#         user='root', 
+#         password = "SQL@0304#",
+#         db='db1',)
+#     # conn.row_factory = pymysql.Row
+#     return connection
+# # def getPost(postId):
+# #     conn = get_db_connection()
+# #     post = conn.execute('SELECT * FROM posts WHERE id = ?', (postId,)).fetchone()
+# #     conn.close()
+# #     if post is None:
+# #         abort(404)
+# #     return post
 
-def getComments(postId):
-    conn = get_db_connection()
-    comments = conn.execute('SELECT * FROM comments WHERE post_id = ?', (postId,)).fetchall()
-    conn.close()
-    if comments is None:
-        return {}
-    return comments
+# def getPost(postId):
+#     conn = get_db_connection()
+#     conn.execute('SELECT * FROM posts WHERE id = %s', (postId,))
+#     post = conn.fetchone()
+#     conn.close()
+#     if post is None:
+#         abort(404)
+#     return post
 
-def getResults(keyword):
-    # keyword is a string
+# # def getComments(postId):
+# #     conn = get_db_connection()
+# #     comments = conn.execute('SELECT * FROM comments WHERE post_id = ?', (postId,)).fetchall()
+# #     conn.close()
+# #     if comments is None:
+# #         return {}
+# #     return comments
 
-    conn = get_db_connection()
-    conn.create_function("REGEXP", 2, regex)
-    results = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    results_act = []
-    for result in results:
-        if keyword in result['title']:
-            results_act.append(result)
-    if getResults is None:
-        return {}
-    return results_act
+# def getComments(postId):
+#     conn = get_db_connection()
+#     conn.execute('SELECT * FROM comments WHERE post_id = %s', (postId,))
+#     comments = conn.fetchall()
+#     conn.close()
+#     if comments is None:
+#         return {}
+#     return comments
+
+# def getResults(keyword):
+#     # keyword is a string
+
+#     conn = get_db_connection()
+#     # conn.create_function("REGEXP", 2, regex)
+#     conn.execute('SELECT * FROM posts')
+#     results = conn.fetchall()
+#     conn.close()
+#     results_act = []
+#     for result in results:
+#         if keyword in result[2]:
+#             results_act.append(result)
+#     if getResults is None:
+#         return {}
+#     return results_act
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -57,7 +87,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 @app.route('/')
 def home():
     conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
+    conn.execute('SELECT * FROM posts')
+    posts = conn.fetchall()
     conn.close()
     return render_template('index.html',posts=posts)
 
@@ -85,7 +116,8 @@ def search():
 @app.route('/<string:username>')
 def byauthor(username):
     conn = get_db_connection()
-    blogs = conn.execute('SELECT * FROM posts WHERE author = ?', (username,)).fetchall()
+    conn.execute('SELECT * FROM posts WHERE author = %s', (username,))
+    blogs = conn.fetchall()
     return render_template('byauthor.html', username=username, blogs=blogs)
 # @app.route('/searchresults')
 # def searchresults():
@@ -103,11 +135,12 @@ def viewPost(postId):
         if not content:
             flash('Can\'t put empty comment')
         else:
-            conn = get_db_connection()
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
             author = session['username']
-            conn.execute('INSERT into comments (post_id, content, author) VALUES (?, ?, ?)', (postId, content, author))
-            conn.commit()
-            conn.close()
+            conn.execute('INSERT into comments (post_id, content, author) VALUES (%s, %s, %s)', (postId, content, author))
+            conn1.commit()
+            conn1.close()
             redirect(url_for('home'))
     comments = getComments(postId)
     return render_template('blogpost.html', posts=post, comments=comments)
@@ -123,10 +156,11 @@ def create():
             flash('Title is necessary')
             return redirect('/create')
         else:
-            conn = get_db_connection()
-            conn.execute('INSERT INTO posts (title, content, author) VALUES (?, ?, ?)', (title, content, author))
-            conn.commit()
-            conn.close()
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('INSERT INTO posts (title, content, author) VALUES (%s, %s, %s)', (title, content, author))
+            conn1.commit()
+            conn1.close()
             return redirect('/')
     return render_template('newpost.html')
 
@@ -136,10 +170,11 @@ def login():
     if request.method == 'POST':
         
         conn = get_db_connection()
-        user = conn.execute('SELECT * FROM users WHERE username = ? and pass_key = ?', (request.form["username"], request.form["password"])).fetchone()
+        conn.execute('SELECT * FROM users WHERE username = %s and pass_key = %s', (request.form["username"], request.form["password"]))
+        user = conn.fetchone()
         conn.close()
         if user is not None:
-            if user['username'] == request.form["username"] and user['pass_key'] == request.form["password"]:
+            if user[0] == request.form["username"] and user[1] == request.form["password"]:
                 session["username"] = request.form["username"]
                 session["password"] = request.form["password"]
                 IS_SESSION = True
@@ -159,10 +194,11 @@ def signup():
     if request.method == 'POST':
         username = request.form["username"]
         password = request.form["password"]
-        conn = get_db_connection()
-        conn.execute('INSERT INTO users (username, pass_key) VALUES (?, ?)', (username, password))
-        conn.commit()
-        conn.close()
+        conn1 = get_db_connection2()
+        conn = conn1.cursor()
+        conn.execute('INSERT INTO users (username, pass_key) VALUES (%s, %s)', (username, password))
+        conn1.commit()
+        conn1.close()
         return redirect(url_for('login'))
     else:
         return render_template('signup.html')
@@ -183,4 +219,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True,host="10.17.51.212",port=5000)
