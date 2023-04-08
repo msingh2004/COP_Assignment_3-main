@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Search Results
+{% endblock %}
+
+{% block body %}
+
+
+{% for message in get_flashed_messages() %}
+<center>
+<div class="alert alert-warning alert-dismissible fade show mt-3 mx-3" role="alert" style="width:40%;">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</center>
+{% endfor %}
+
+      <center>
+      <div class = "text-white mt-5">
+        <h2>Search results</h2>
+      </div>
+    </center>
+
+      {%for result in results%}
+      <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
+        <div class="card bg-secondary text-white" data-bs-theme = "dark">
+  
+            <div class="card-body">
+              <h3 class="card-title">{{result[2]}}</h3>
+              <h6> {{result[4]}} </h6>
+              <!-- <p class="card-text">{{result.content}}</p> -->
+              <a href="{{result[0]}}" class="btn btn-primary">Read full post</a>
+              <br>
+
+              <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-link">Upvote (21)</button>
+                <button type="button" class="btn btn-link">Downvote (12)</button>
+                <button type="button" class="btn btn-link">Follow</button>
+                <button type="button" class="btn btn-link">Delete post</button>
+              </div>
+
+            </div>
+          </div>
+    </div>
+
+    {%endfor%}
+
+      {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block body %}
+
+
+{% for message in get_flashed_messages() %}
+<center>
+<div class="alert alert-warning alert-dismissible fade show mt-3 mx-3" role="alert" style="width:40%;">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</center>
+{% endfor %}
+
+    <center>
+    <div>
+        <h3 class = "text-white mt-5 mb-3">Explore more</h3>
+    </div>
+    
+    <!-- <div class="input-group mt-3" style="width:50%"> -->
+      <form method="post" style="width:50%">
+        <input type="search" class="form-control mb-3" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="keyword"> </input>
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+      </form>
+      <!-- </div> -->
+
+
+    <div>
+        <h3 class = "text-white mt-5">Explore by categories</h3>
+    </div>  
+
+    <div class="dropdown mt-3">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Choose a category to browse
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Category 1</a></li>
+          <li><a class="dropdown-item" href="#">Category 2</a></li>
+          <li><a class="dropdown-item" href="#">Category 3</a></li>
+        </ul>
+      </div>
+
+    </center>
+
+{% endblock %}

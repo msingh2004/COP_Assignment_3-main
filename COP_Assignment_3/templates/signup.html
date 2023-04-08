@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block body %}
+
+
+{% for message in get_flashed_messages() %}
+<center>
+<div class="alert alert-warning alert-dismissible fade show mt-3 mx-3" role="alert" style="width:40%;">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</center>
+{% endfor %}
+
+    <center>
+      <h3 class="text-white mt-5">Signup to Sonder</h3>
+    <form method="post" class = "text-white mt-3" style="width:30%" data-bs-theme="dark">
+        <div class="form-floating mb-3 ">
+            <input name="name" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email id</label>
+        </div>
+
+      <div class="form-floating mb-3 ">
+        <input name="username" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Username</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+      <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <button type="submit" class = "btn btn-primary">Submit</button>
+        <!-- <button type="submit" class="btn btn-primary">Login instead</button> -->
+        <a href="/login" class="btn btn-primary">Login instead</a>
+      </div>
+    </form>
+  </center>
+
+{% endblock %}
