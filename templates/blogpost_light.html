@@ -1,0 +1,95 @@
+{% extends 'base_light.html' %}
+
+{% block title %}
+Blogpost
+{% endblock %}
+
+{% block body %}
+
+
+{% for message in get_flashed_messages() %}
+<center>
+<div class="alert alert-warning alert-dismissible fade show mt-3 mx-3" role="alert" style="width:40%;">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</center>
+{% endfor %}
+
+      <div class="d-grid gap-3">
+        <div class="p-2 bg-dark text-white mx-5 mt-3" data-bs-theme="dark">
+            <div class="card bg-secondary text-white" data-bs-theme = "dark">
+      
+                <div class="card-body">
+                  <h2 class="card-title">{{posts[2]}}</h2>
+                  <h5> {{posts[4]}} </h5>
+                  <p class="card-text">{{posts[3]}}</p>
+                  <form method="post">
+                  <button  type="submit" name="hindi" class="btn btn-primary mb-1">Hindi</button>
+                  </form>
+                  <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-link">Upvote (21)</button>
+                    <button type="button" class="btn btn-link">Downvote (12)</button>
+                    <button type="button" class="btn btn-link">Follow</button>
+                    {%if session['username'] and session['username'] == posts[4]%}
+                    <button type="button" class="btn btn-link">Delete post</button>
+                    {%else%}
+                    {%endif%}
+                  </div>
+                </div>
+              </div>
+        </div>
+
+
+        <div><h3 class = "text-white mx-5">Comments</h3></div>
+
+
+        <div class="p-2 bg-dark text-white mx-5" data-bs-theme="dark">
+          <div class="card bg-secondary text-white" data-bs-theme = "dark">
+          <div class="card-body">
+        {%if session['username']%}
+        <form method="post">
+        <div class="mb-3">
+          <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
+          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content"></input>
+        </div>
+        <button type="submit" class="btn btn-primary mb-1">Submit</button>
+        </form>
+        {%else%}
+        <div class="mb-3">
+          <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
+          <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content"></input>
+        </div>
+        <button onclick="location.href='/login'" type="submit"  class="btn btn-primary mb-1">Submit</button>
+        {%endif%}
+    </div>
+  </div>
+</div>
+
+        {%for comment in comments%}
+        <div class="p-2 bg-dark text-white mx-5" data-bs-theme="dark">
+            <div class="card bg-secondary text-white" data-bs-theme = "dark">
+      
+                <div class="card-body">
+                  <h5> {{comment[4]}}  </h5>
+                  <p class="card-text">{{comment[3]}}</p>
+                  {%if session['username'] and session['username'] == comment[4]%}
+                  <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    
+                    <button type="button" class="btn btn-link">Delete comment</button>
+
+                  </div>
+                  {%else%}
+                  {%endif%}
+
+
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+      </div>
+
+
+
+
+{% endblock %}

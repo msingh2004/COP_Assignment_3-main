@@ -92,6 +92,15 @@ def home():
     conn.close()
     return render_template('index.html',posts=posts)
 
+
+@app.route('/light')
+def home_light():
+    conn = get_db_connection()
+    conn.execute('SELECT * FROM posts')
+    posts = conn.fetchall()
+    conn.close()
+    return render_template('index_light.html',posts=posts)
+
 # @app.route('/blogpost')
 # def blogpost():  
 #     return render_template('blogpost.html')

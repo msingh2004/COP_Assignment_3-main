@@ -16,16 +16,16 @@ def regex(expr, item):
 def get_db_connection():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "SQL@0304#",
-        db='db1',)
+        password = "Suren@2003",
+        db='data1',)
     # conn.row_factory = pymysql.Row
     return connection.cursor()
 
 def get_db_connection2():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "SQL@0304#",
-        db='db1',)
+        password = "Suren@2003",
+        db='data1',)
     # conn.row_factory = pymysql.Row
     return connection
 # def getPost(postId):

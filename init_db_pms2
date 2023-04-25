@@ -6,8 +6,8 @@ import pymysql
 
 connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "SQL@0304#",
-        db='db1',)
+        password = "Suren@2003",
+        db='data1',)
 
 cur = connection.cursor()
 # with open('schema.sql') as f:
