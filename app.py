@@ -92,6 +92,15 @@ def home():
     conn.close()
     return render_template('index.html',posts=posts)
 
+
+@app.route('/light')
+def home_light():
+    conn = get_db_connection()
+    conn.execute('SELECT * FROM posts')
+    posts = conn.fetchall()
+    conn.close()
+    return render_template('index_light.html',posts=posts)
+
 # @app.route('/blogpost')
 # def blogpost():  
 #     return render_template('blogpost.html')
@@ -112,6 +121,16 @@ def search():
         return render_template('searchresults.html', results=results)
     else:
         return render_template('search.html')
+    
+@app.route('/search_light', methods=('GET', 'POST'))
+def search_light():
+    if request.method == 'POST':
+        keyword = request.form['keyword']
+        results = getResults(keyword)
+        return render_template('searchresults_light.html', results=results)
+    else:
+        return render_template('search_light.html')
+
 
 @app.route('/<string:username>')
 def byauthor(username):
@@ -119,10 +138,31 @@ def byauthor(username):
     conn.execute('SELECT * FROM posts WHERE author = %s', (username,))
     blogs = conn.fetchall()
     return render_template('byauthor.html', username=username, blogs=blogs)
+
+
+@app.route('/<string:username>_light')
+def byauthor_light(username):
+    conn = get_db_connection()
+    conn.execute('SELECT * FROM posts WHERE author = %s', (username,))
+    blogs = conn.fetchall()
+    return render_template('byauthor_light.html', username=username, blogs=blogs)
+
+
 # @app.route('/searchresults')
 # def searchresults():
 #     return render_template('searchresults.html')
 
+<<<<<<< HEAD
+=======
+@app.route('/trending')
+def trending():
+    return render_template('trending.html')
+
+@app.route('/trending_light')
+def trending_light():
+    return render_template('trending_light.html')
+
+>>>>>>> efde7fcb355902675368800d6cd971c01030084a
 @app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
@@ -218,6 +258,8 @@ def viewPost(postId):
     comments = getComments(postId)
     return render_template('blogpost.html', posts=post2, comments=comments)
 
+
+
 @app.route('/create', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -240,7 +282,29 @@ def create():
             return redirect('/')
     return render_template('newpost.html')
 
-@app.route('/login', methods=('GET', 'POST'))
+
+@app.route('/create_light', methods=('GET', 'POST'))
+def create_light():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        
+        author = session['username']
+        if not title:
+            flash('Title is necessary')
+            return redirect('/create_light')
+        else:
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('INSERT INTO posts (title, content, author) VALUES (%s, %s, %s)', (title, content, author))
+            conn1.commit()
+            conn1.close()
+            return redirect('/')
+    return render_template('newpost_light.html')
+
+
+
+@app.route('/login_light', methods=('GET', 'POST'))
 def login():
     session["username"] = None
     if request.method == 'POST':
@@ -255,15 +319,17 @@ def login():
                 session["password"] = request.form["password"]
                 IS_SESSION = True
                 flash("Logged in successfully")
-                return redirect(url_for('home'))
+                return redirect(url_for('home_light'))
             else:
                 flash("Incorrect username or password")
-                return redirect(url_for('login'))
+                return redirect(url_for('login_light'))
         else:
             flash("Incorrect username or password")
-            return redirect(url_for('login'))
+            return redirect(url_for('login_light'))
     else:
-        return render_template('login.html')
+        return render_template('login_light.html')
+    
+
         
 @app.route('/signup', methods=('GET', 'POST'))
 def signup():
@@ -278,19 +344,57 @@ def signup():
         return redirect(url_for('login'))
     else:
         return render_template('signup.html')
+    
+
+
+@app.route('/signup_light', methods=('GET', 'POST'))
+def signup_light():
+    if request.method == 'POST':
+        username = request.form["username"]
+        password = request.form["password"]
+        conn1 = get_db_connection2()
+        conn = conn1.cursor()
+        conn.execute('INSERT INTO users (username, pass_key) VALUES (%s, %s)', (username, password))
+        conn1.commit()
+        conn1.close()
+        return redirect(url_for('login_light'))
+    else:
+        return render_template('signup_light.html')
+
+
 
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
 
+@app.route('/forgotpass_light')
+def forgotpass_light():
+    return render_template('forgotpass_light.html')
+
+@app.route('/profile_light')
+def profile_light():
+    return render_template('profile_light.html')
+
+
 @app.route('/following')
 def following():
     return render_template('following.html')
+
+
+@app.route('/following_light')
+def following_light():
+    return render_template('following_light.html')
+
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
+
+@app.route('/logout_light')
+def logout_light():
+    session.pop('username', None)
+    return redirect(url_for('home_light'))
 
 
 @app.route('/trending')

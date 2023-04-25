@@ -23,7 +23,7 @@ def regex(expr, item):
 def get_db_connection():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "Pravar12345#",
+        password = "Suren@2003",
         db='data1',)
     # conn.row_factory = pymysql.Row
     return connection.cursor()
@@ -31,7 +31,7 @@ def get_db_connection():
 def get_db_connection2():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "Pravar12345#",
+        password = "Suren@2003",
         db='data1',)
     # conn.row_factory = pymysql.Row
     return connection
