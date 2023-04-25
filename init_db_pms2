@@ -1,7 +1,12 @@
 import pymysql
+# connection = pymysql.connect(host='localhost',
+#         user='root', 
+#         password = "Sql@0304#",
+#         db='db1',)
+
 connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "Sql@0304#",
+        password = "SQL@0304#",
         db='db1',)
 
 cur = connection.cursor()

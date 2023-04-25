@@ -130,20 +130,25 @@ def trending():
 @app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
+    post2 = (post[0],post[1],post[2],post[3],post[4])
     if request.method == 'POST':
-        content = request.form['content']
-        if not content:
-            flash('Can\'t put empty comment')
-        else:
-            conn1 = get_db_connection2()
-            conn = conn1.cursor()
-            author = session['username']
-            conn.execute('INSERT into comments (post_id, content, author) VALUES (%s, %s, %s)', (postId, content, author))
-            conn1.commit()
-            conn1.close()
-            redirect(url_for('home'))
+        
+        if "hindi" in request.form:
+            post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4])
+        if 'content' in request.form:
+            content = request.form['content']
+            if not content:
+                flash('Can\'t put empty comment')
+            else:
+                conn1 = get_db_connection2()
+                conn = conn1.cursor()
+                author = session['username']
+                conn.execute('INSERT into comments (post_id, content, author) VALUES (%s, %s, %s)', (postId, content, author))
+                conn1.commit()
+                conn1.close()
+                redirect(url_for('home'))
     comments = getComments(postId)
-    return render_template('blogpost.html', posts=post, comments=comments)
+    return render_template('blogpost.html', posts=post2, comments=comments)
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
@@ -219,4 +224,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True,host="10.17.51.212",port=5000)
+    app.run(debug=True)
+#,host="10.17.51.212",port=5000

@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect, ses
 from flask_session import Session
 from werkzeug.exceptions import abort
 import pymysql
+import requests
 
 IS_SESSION = False
 
@@ -15,7 +16,7 @@ def regex(expr, item):
 def get_db_connection():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "Sql@0304#",
+        password = "SQL@0304#",
         db='db1',)
     # conn.row_factory = pymysql.Row
     return connection.cursor()
@@ -23,7 +24,7 @@ def get_db_connection():
 def get_db_connection2():
     connection = pymysql.connect(host='localhost',
         user='root', 
-        password = "Sql@0304#",
+        password = "SQL@0304#",
         db='db1',)
     # conn.row_factory = pymysql.Row
     return connection
@@ -76,3 +77,20 @@ def getResults(keyword):
     if getResults is None:
         return {}
     return results_act
+
+def translatetext(post):
+
+    url = "https://microsoft-translator-text.p.rapidapi.com/translate"
+
+    querystring = {"to[0]":"hi","api-version":"3.0","from":"en","profanityAction":"NoAction","textType":"plain"}
+
+    payload = [{ "Text": post }]
+    headers = {
+	"content-type": "application/json",
+	"X-RapidAPI-Key": "c6109840damshe85ac6c9c87655ep1f5ea4jsnd07fe7d4da69",
+	"X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com"
+    }
+
+    response = requests.post(url, json=payload, headers=headers, params=querystring)
+
+    return (response.text)[27:-15]

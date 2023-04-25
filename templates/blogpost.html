@@ -24,6 +24,9 @@ Blogpost
                   <h2 class="card-title">{{posts[2]}}</h2>
                   <h5> {{posts[4]}} </h5>
                   <p class="card-text">{{posts[3]}}</p>
+                  <form method="post">
+                  <button  type="submit" name="hindi" class="btn btn-primary mb-1">Hindi</button>
+                  </form>
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-link">Upvote (21)</button>
                     <button type="button" class="btn btn-link">Downvote (12)</button>
@@ -57,7 +60,7 @@ Blogpost
           <label for="exampleInputComment1" class="form-label text-white">Add new comment</label>
           <input type="text" class="form-control" id="exampleInputComment1" placeholder="Enter comment here" name="content"></input>
         </div>
-        <button onclick="location.href='/login'" type="submit" class="btn btn-primary mb-1">Submit</button>
+        <button onclick="location.href='/login'" type="submit"  class="btn btn-primary mb-1">Submit</button>
         {%endif%}
     </div>
   </div>
