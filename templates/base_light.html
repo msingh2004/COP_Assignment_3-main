@@ -41,15 +41,15 @@
               <div class="btn-group mx-5">
                 <!-- <a href="/login" class="btn btn-primary">Login</a>
                 <a href="/signup" class="btn btn-primary">Signup</a> -->
-                <a href="/create" class="btn btn-info text-white">New Post</a>
-                <a href="/profile" class="btn btn-info text-white">My Profile</a>
-                <a href="/logout" class="btn btn-info text-white">Logout</a>
+                <a href="/create_light" class="btn btn-info text-dark">New Post</a>
+                <a href="/profile_light" class="btn btn-info text-dark">My Profile</a>
+                <a href="/logout_light" class="btn btn-info text-dark">Logout</a>
               </div>
               {%else%}
               <div class="btn-group mx-5">
-                <a href="/login" class="btn btn-info text-dark opacity-50">New Post</a>
-                <a href="/login" class="btn btn-info text-dark opacity-50">Login</a>
-                <a href="/signup" class="btn btn-info text-dark opacity-50">Signup</a>
+                <a href="/login_light" class="btn btn-info text-dark">Login</a>
+                <a href="/signup_light" class="btn btn-info text-dark">Signup</a>
+                <a href="/forgotpass_light" class="btn btn-info text-dark">Forgot Password</a>
                 <!-- <a href="/profile" class="btn btn-primary">My Profile</a>
                 <a href="#" class="btn btn-primary">Logout</a> -->
               </div>
@@ -74,16 +74,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
+            <a class="nav-link active text-white" aria-current="page" href="/light">Home</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="/search">Search</a>
+            <a class="nav-link active text-white" aria-current="page" href="/search_light">Search</a>
             </li>      
             <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="/trending">Trending</a>
+            <a class="nav-link active text-white" aria-current="page" href="/trending_light">Trending</a>
             </li>         
             <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="/following">Following</a>
+            <a class="nav-link active text-white" aria-current="page" href="/following_light">Following</a>
             </li>    
         </ul>
         </div>
@@ -104,9 +104,9 @@
               <h5>Sonder</h5>
               <ul class="nav flex-column">
                 <li class="nav-item mb-2"><a href="/" class="nav-link p-0">Home</a></li>
-                <li class="nav-item mb-2"><a href="/search" class="nav-link p-0">Search</a></li>
-                <li class="nav-item mb-2"><a href="/trending" class="nav-link p-0">Trending</a></li>
-                <li class="nav-item mb-2"><a href="/following" class="nav-link p-0">Following</a></li>
+                <li class="nav-item mb-2"><a href="/search_light" class="nav-link p-0">Search</a></li>
+                <li class="nav-item mb-2"><a href="/trending_light" class="nav-link p-0">Trending</a></li>
+                <li class="nav-item mb-2"><a href="/following_light" class="nav-link p-0">Following</a></li>
               </ul>
             </div>
       
@@ -127,7 +127,7 @@
                 <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                   <label for="newsletter1" class="visually-hidden">Email address</label>
                   <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
-                  <button class="btn btn-primary" type="button">Subscribe</button>
+                  <button class="btn btn-info text-dark" type="button">Subscribe</button>
                 </div>
               </form>
             </div>
