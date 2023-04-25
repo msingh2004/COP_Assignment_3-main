@@ -28,11 +28,23 @@ Blogpost
                   <button  type="submit" name="hindi" class="btn btn-primary mb-1">Hindi</button>
                   </form>
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-link">Upvote (21)</button>
-                    <button type="button" class="btn btn-link">Downvote (12)</button>
-                    <button type="button" class="btn btn-link">Follow</button>
+                 
+                    {%if session['username']%}
+                    <form method="post">
+                    <button type="submit" name="upvote" class="btn btn-link">Upvotes({{posts[5]}})</button>
+                    <button type="submit" name="downvote" class="btn btn-link">Downvote({{posts[6]}})</button>
+                    <!-- <button type="button" name="follow" class="btn btn-link">Follow</button> -->
+                  </form>
+                    {%else%}
+                    <button onclick="location.href='/login'" type="submit" name="upvote" class="btn btn-link">Upvotes({{posts[5]}})</button>
+                    <button type="submit" name="downvote" class="btn btn-link">Downvote({{posts[6]}})</button>
+                    <!-- <button type="button" name="follow" class="btn btn-link">Follow</button> -->
+                    {%endif%}
+                  
                     {%if session['username'] and session['username'] == posts[4]%}
-                    <button type="button" class="btn btn-link">Delete post</button>
+                    <form method="post">
+                    <button type="submit" name="delete" class="btn btn-link">Delete post</button>
+                  </form>
                     {%else%}
                     {%endif%}
                   </div>
@@ -75,9 +87,9 @@ Blogpost
                   <p class="card-text">{{comment[3]}}</p>
                   {%if session['username'] and session['username'] == comment[4]%}
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    
-                    <button type="button" class="btn btn-link">Delete comment</button>
-
+                    <form method="post">
+                    <button type="submit" name="delete_comment" value="{{comment[0]}}" class="btn btn-link">Delete comment</button>
+                  </form>
                   </div>
                   {%else%}
                   {%endif%}
