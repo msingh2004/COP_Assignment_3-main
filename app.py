@@ -123,10 +123,6 @@ def byauthor(username):
 # def searchresults():
 #     return render_template('searchresults.html')
 
-@app.route('/trending')
-def trending():
-    return render_template('trending.html')
-
 @app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
@@ -227,7 +223,10 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        
+        length = min(len(content),100)
+        summary2 = content[0:length-1]
+        if "GPT" in request.form:
+            summary2 = askgpt(content)
         author = session['username']
         if not title:
             flash('Title is necessary')
@@ -235,7 +234,7 @@ def create():
         else:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
-            conn.execute('INSERT INTO posts (title, content, author) VALUES (%s, %s, %s)', (title, content, author))
+            conn.execute('INSERT INTO posts (title, content, author,summary) VALUES (%s, %s, %s,%s)', (title, content, author,summary2))
             conn1.commit()
             conn1.close()
             return redirect('/')
@@ -292,6 +291,18 @@ def following():
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
+
+
+@app.route('/trending')
+def trending():
+    conn1 = get_db_connection2()
+    conn = conn1.cursor()
+    conn.execute('SELECT * FROM posts')
+    posts = list(conn.fetchall())
+    posts.sort(key = lambda x : x[5])
+    posts.reverse()
+    return render_template('trending.html', posts=posts)
+
 
 
 if __name__ == "__main__":
