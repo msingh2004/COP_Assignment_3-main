@@ -152,17 +152,6 @@ def byauthor_light(username):
 # def searchresults():
 #     return render_template('searchresults.html')
 
-<<<<<<< HEAD
-=======
-@app.route('/trending')
-def trending():
-    return render_template('trending.html')
-
-@app.route('/trending_light')
-def trending_light():
-    return render_template('trending_light.html')
-
->>>>>>> efde7fcb355902675368800d6cd971c01030084a
 @app.route('/<int:postId>', methods=('GET', 'POST'))
 def viewPost(postId):
     post = getPost(postId)
