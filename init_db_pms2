@@ -13,13 +13,17 @@ cur = connection.cursor()
 # with open('schema.sql') as f:
 #     cur.execute(f.read())
 cur.execute("DROP TABLE IF EXISTS posts")
-cur.execute("CREATE TABLE posts (id INTEGER PRIMARY KEY AUTO_INCREMENT,\ncreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\ntitle TEXT NOT NULL,\ncontent TEXT NOT NULL,\nauthor TEXT NOT NULL )")
+cur.execute("CREATE TABLE posts (id INTEGER PRIMARY KEY AUTO_INCREMENT,\ncreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\ntitle TEXT NOT NULL,\ncontent TEXT NOT NULL,\nauthor TEXT NOT NULL,\n upvotes INTEGER,\n downvotes INTEGER )")
 cur.execute("DROP TABLE IF EXISTS comments")
 cur.execute("CREATE TABLE comments (comment_id INTEGER PRIMARY KEY AUTO_INCREMENT,\ncreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\npost_id INTEGER NOT NULL,\ncontent TEXT NOT NULL,\nauthor TEXT NOT NULL )")
 cur.execute("DROP TABLE IF EXISTS email_ids_subscriptions")
 # cur.execute("CREATE TABLE email_ids_subscriptions (email_id TEXT PRIMARY KEY)")
 cur.execute("DROP TABLE IF EXISTS users")
 cur.execute("CREATE TABLE users (username varchar(255) PRIMARY KEY,pass_key TEXT )")
+cur.execute("DROP TABLE IF EXISTS user_blogs_upvoted")
+cur.execute("CREATE TABLE user_blogs_upvoted (username varchar(255) PRIMARY KEY, postId INTEGER )")
+cur.execute("DROP TABLE IF EXISTS user_blogs_downvoted")
+cur.execute("CREATE TABLE user_blogs_downvoted (username varchar(255) PRIMARY KEY, postId INTEGER )")
 # with open('postvalues.csv','r') as file:
 #     postcount = 0
 #     # cur.execute("INSERT INTO posts VALUES (?,?,?,?,?,?,?)",file[0].split(","))
@@ -42,21 +46,21 @@ cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)",
 cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
             ('Aquarius', 'FirstNeil3'))
 
-cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s,%s)", 
-            ('1', 'First', 'Neil','Author1'))
+cur.execute("INSERT INTO posts (id, title, content,author,upvotes, downvotes) VALUES (%s, %s, %s,%s, %s, %s)", 
+            ('1', 'First', 'Neil','Author1', '0', '0'))
 
-cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s, %s)",
-            ('2', 'Second Post', 'Buzz Aldrin','Author1'))
+cur.execute("INSERT INTO posts (id, title, content,author,upvotes,downvotes) VALUES (%s, %s, %s, %s, %s, %s)",
+            ('2', 'Second Post', 'Buzz Aldrin','Author1', '0', '0'))
 
-with open('postvalues.csv','r') as file:
-    postcount = 0
-    # cur.execute("INSERT INTO posts VALUES (?,?,?,?,?,?,?)",file[0].split(","))
-    i = 3
-    for row in file:
-        cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s,%s)",tuple([i,row.split(",")[3],row.split(",")[6],row.split(",")[4]]))
-        connection.commit()
-        postcount+=1
-        i+=1
+# with open('postvalues.csv','r') as file:
+#     postcount = 0
+#     # cur.execute("INSERT INTO posts VALUES (?,?,?,?,?,?,?)",file[0].split(","))
+#     i = 3
+#     for row in file:
+#         cur.execute("INSERT INTO posts (id, title, content,author) VALUES (%s, %s, %s,%s)",tuple([i,row.split(",")[3],row.split(",")[6],row.split(",")[4]]))
+#         connection.commit()
+#         postcount+=1
+#         i+=1
 
 cur.execute("INSERT INTO comments (comment_id, post_id, content,author) VALUES (%s, %s,%s,%s)",
             ('1', '1', 'I\'ll be fucked up if you can\'t be right here','Author1'))
