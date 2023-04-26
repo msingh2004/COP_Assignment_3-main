@@ -13,6 +13,7 @@ cur = connection.cursor()
 # with open('schema.sql') as f:
 #     cur.execute(f.read())
 cur.execute("DROP TABLE IF EXISTS posts")
+print("hello1")
 cur.execute("CREATE TABLE posts (id INTEGER PRIMARY KEY AUTO_INCREMENT,\ncreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\ntitle TEXT NOT NULL,\ncontent TEXT NOT NULL,\nauthor TEXT NOT NULL,\n upvotes INTEGER,\n downvotes INTEGER,\n summary TEXT)")
 cur.execute("DROP TABLE IF EXISTS comments")
 cur.execute("CREATE TABLE comments (comment_id INTEGER PRIMARY KEY AUTO_INCREMENT,\ncreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\npost_id INTEGER NOT NULL,\ncontent TEXT NOT NULL,\nauthor TEXT NOT NULL )")
@@ -38,9 +39,11 @@ cur.execute("CREATE TABLE user_blogs_downvoted ( username varchar(255) , postId 
 #         cur.execute("INSERT INTO users VALUES (%s,%s,%s,%s,%s,%s,%s)",tuple(row.split(",")[0:7]))
 #         connection.commit()
 #         usercount+=1
-    
+
+
 cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
             ('Author1', 'FirstNeil'))
+
 cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
             ('Leo', 'FirstNeil2'))
 cur.execute("INSERT INTO users (username, pass_key) VALUES (%s, %s)", 
