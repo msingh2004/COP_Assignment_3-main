@@ -131,9 +131,9 @@ def byauthor(username):
 # def searchresults():
 #     return render_template('searchresults.html')
 
-@app.route('/trending')
-def trending():
-    return render_template('trending.html')
+# @app.route('/trending')
+# def trending():
+#     return render_template('trending.html')
 
 
 @app.route('/<int:postId>', methods=('GET', 'POST'))
@@ -144,7 +144,7 @@ def viewPost(postId):
     if request.method == 'POST':
         
         if "hindi" in request.form:
-            post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4])
+            post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4], post[5], post[6])
         elif "upvote" in request.form:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
@@ -296,8 +296,34 @@ def logout():
 
 
 
-@app.route('/login_light', methods=('GET', 'POST'))
+@app.route('/login', methods=('GET', 'POST'))
 def login():
+    session["username"] = None
+    if request.method == 'POST':
+        
+        conn = get_db_connection()
+        conn.execute('SELECT * FROM users WHERE username = %s and pass_key = %s', (request.form["username"], request.form["password"]))
+        user = conn.fetchone()
+        conn.close()
+        if user is not None:
+            if user[0] == request.form["username"] and user[1] == request.form["password"]:
+                session["username"] = request.form["username"]
+                session["password"] = request.form["password"]
+                IS_SESSION = True
+                flash("Logged in successfully")
+                return redirect(url_for('home_light'))
+            else:
+                flash("Incorrect username or password")
+                return redirect(url_for('login'))
+        else:
+            flash("Incorrect username or password")
+            return redirect(url_for('login'))
+    else:
+        return render_template('login.html')
+
+
+@app.route('/login_light', methods=('GET', 'POST'))
+def login_light():
     session["username"] = None
     if request.method == 'POST':
         
@@ -399,7 +425,13 @@ def byauthor_light(username):
 
 @app.route('/trending_light')
 def trending_light():
-    return render_template('trending_light.html')
+    conn1 = get_db_connection2()
+    conn = conn1.cursor()
+    conn.execute('SELECT * FROM posts')
+    posts = list(conn.fetchall())
+    posts.sort(key = lambda x : x[5])
+    posts.reverse()
+    return render_template('trending_light.html', posts=posts)
 
 @app.route('/trending')
 def trending():
@@ -410,6 +442,103 @@ def trending():
     posts.sort(key = lambda x : x[5])
     posts.reverse()
     return render_template('trending.html', posts=posts)
+
+
+
+@app.route('/<int:postId>_light', methods=('GET', 'POST'))
+def viewPost_light(postId):
+    post = getPost(postId)
+    post2 = (post[0],post[1],post[2],post[3],post[4],post[5],post[6])
+    
+    if request.method == 'POST':
+        
+        if "hindi" in request.form:
+            post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4], post[5], post[6])
+        elif "upvote" in request.form:
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('SELECT * FROM user_blogs_upvoted WHERE postId = %s', (postId,))
+            blog_liked_users = conn.fetchall()
+            conn.execute('SELECT * FROM user_blogs_downvoted WHERE postId = %s', (postId,))
+            blog_disliked_users = conn.fetchall()
+            if (not((session['username'], postId) in blog_liked_users)) and (not((session['username'], postId) in blog_disliked_users)):
+                conn.execute('UPDATE posts SET upvotes=upvotes+1 WHERE id = %s', (postId,))
+                conn.execute('INSERT into user_blogs_upvoted (username, postId) VALUES (%s, %s)', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+            elif (not((session['username'], postId) in blog_liked_users)) and ((session['username'], postId) in blog_disliked_users):
+                conn.execute('UPDATE posts SET upvotes=upvotes+1 WHERE id = %s', (postId,))
+                conn.execute('UPDATE posts SET downvotes=downvotes-1 WHERE id = %s', (postId,))
+                conn.execute('INSERT into user_blogs_upvoted (username, postId) VALUES (%s, %s)', (session['username'], postId))
+                conn.execute('DELETE from user_blogs_downvoted WHERE username = %s AND postId = %s', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+            else:
+                conn.execute('UPDATE posts SET upvotes=upvotes-1 WHERE id = %s', (postId,))
+                conn.execute('DELETE from user_blogs_upvoted WHERE username = %s AND postId = %s', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+        elif "downvote" in request.form:
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('SELECT * FROM user_blogs_upvoted WHERE postId = %s', (postId,))
+            blog_liked_users = conn.fetchall()
+            conn.execute('SELECT * FROM user_blogs_downvoted WHERE postId = %s', (postId,))
+            blog_disliked_users = conn.fetchall()
+            if (not((session['username'], postId) in blog_disliked_users)) and (not((session['username'], postId) in blog_liked_users)):
+                conn.execute('UPDATE posts SET downvotes=downvotes+1 WHERE id = %s', (postId,))
+                conn.execute('INSERT into user_blogs_downvoted (username, postId) VALUES (%s, %s)', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+
+            elif (not((session['username'], postId) in blog_disliked_users)) and ((session['username'], postId) in blog_liked_users):
+                conn.execute('UPDATE posts SET downvotes=downvotes+1 WHERE id = %s', (postId,))
+                conn.execute('UPDATE posts SET upvotes=upvotes-1 WHERE id = %s', (postId,))
+                conn.execute('INSERT into user_blogs_downvoted (username, postId) VALUES (%s, %s)', (session['username'], postId))
+                conn.execute('DELETE from user_blogs_upvoted WHERE username = %s AND postId = %s', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+            else:
+                conn.execute('UPDATE posts SET downvotes=downvotes-1 WHERE id = %s', (postId,))
+                conn.execute('DELETE from user_blogs_downvoted WHERE username = %s AND postId = %s', (session['username'], postId))
+                conn1.commit()
+                conn1.close()
+                return redirect(url_for('viewPost_light', postId=postId))
+        if 'content' in request.form:
+            content = request.form['content']
+            if not content:
+                flash('Can\'t put empty comment')
+            else:
+                conn1 = get_db_connection2()
+                conn = conn1.cursor()
+                author = session['username']
+                conn.execute('INSERT into comments (post_id, content, author) VALUES (%s, %s, %s)', (postId, content, author))
+                conn1.commit()
+                conn1.close()
+                # redirect(url_for('home'))
+
+        if 'delete' in request.form:
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('DELETE from posts WHERE id = %s', (postId,))
+            conn1.commit()
+            conn1.close()
+            return redirect(url_for('home_light'))
+        elif 'delete_comment' in request.form:
+            conn1 = get_db_connection2()
+            conn = conn1.cursor()
+            conn.execute('DELETE from comments WHERE comment_id = %s', (request.form['delete_comment'],))
+            conn1.commit()
+            conn1.close()
+            return redirect(url_for('viewPost_light', postId=postId))
+    
+    comments = getComments(postId)
+    return render_template('blogpost_light.html', posts=post2, comments=comments)
 
 
 
