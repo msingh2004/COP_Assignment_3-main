@@ -140,11 +140,15 @@ def byauthor(username):
 def viewPost(postId):
     post = getPost(postId)
     post2 = (post[0],post[1],post[2],post[3],post[4],post[5],post[6])
-    
+    post3 = (post[0],post[1],post[2],post[3],post[4],post[5],post[6])
     if request.method == 'POST':
         
         if "hindi" in request.form:
             post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4], post[5], post[6])
+        if "read_aloud" in request.form:
+            bol_ke_dikha(post[3])
+        if "english" in request.form:
+            post2 = post3
         elif "upvote" in request.form:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
@@ -249,7 +253,7 @@ def create():
         else:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
-            conn.execute('INSERT INTO posts (title, content, author,summary) VALUES (%s, %s, %s,%s)', (title, content, author,summary2))
+            conn.execute('INSERT INTO posts (title, content, author,upvotes,downvotes,summary) VALUES (%s, %s, %s,%s,%s,%s)', (title, content, author,0,0,summary2))
             conn1.commit()
             conn1.close()
             return redirect('/')
@@ -392,18 +396,24 @@ def create_light():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        
+
+        length = min(len(content),100)
+        summary2 = content[0:length-1]
+        if "GPT" in request.form:
+            summary2 = askgpt(content)
+
         author = session['username']
         if not title:
             flash('Title is necessary')
             return redirect('/create_light')
         else:
             conn1 = get_db_connection2()
+
             conn = conn1.cursor()
-            conn.execute('INSERT INTO posts (title, content, author) VALUES (%s, %s, %s)', (title, content, author))
+            conn.execute('INSERT INTO posts (title, content, author,upvotes,downvotes,summary) VALUES (%s, %s, %s,%s,%s,%s)', (title, content, author,0,0,summary2))
             conn1.commit()
             conn1.close()
-            return redirect('/')
+            return redirect('/light')
     return render_template('newpost_light.html')
 
 
@@ -449,11 +459,17 @@ def trending():
 def viewPost_light(postId):
     post = getPost(postId)
     post2 = (post[0],post[1],post[2],post[3],post[4],post[5],post[6])
+    post3 = (post[0],post[1],post[2],post[3],post[4],post[5],post[6])
     
     if request.method == 'POST':
         
         if "hindi" in request.form:
             post2 = (post[0],post[1],post[2],translatetext(post[3]),post[4], post[5], post[6])
+        if "read_aloud" in request.form:
+            bol_ke_dikha(post[3])
+        if "english" in request.form:
+            post2 = post3
+
         elif "upvote" in request.form:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
