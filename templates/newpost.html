@@ -31,6 +31,9 @@
           <textarea class="form-control mt-2" id="exampleFormControlTextarea1" rows="15" placeholder="Write your blog post here" class="form-control" name="content">{{ request.form['content']}}</textarea>
         </div>
         <input class="btn btn-primary mt-3" type="submit" value="Submit">
+        <form method="post">
+          <button  type="submit" name="GPT" class="btn btn-primary mb-1">Get summary from GPT</button>
+          </form>
     </form>
 
 {% endblock %}

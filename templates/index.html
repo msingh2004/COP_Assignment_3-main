@@ -40,13 +40,13 @@ Home
 
                   
                   <!-- <h6>{{post.id}}</h6> -->
-                  <p class="card-text">{{post[3]}}</p>
+                  <p class="card-text">{{post[3][:1000]}}</p>
                   <a href="{{post[0]}}" class="btn btn-primary mb-2">Read full post</a>
                   <br>
 
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-link">Upvote (21)</button>
-                    <button type="button" class="btn btn-link">Downvote (12)</button>
+                    <button type="button" class="btn btn-link">Upvote ({{post[5]}})</button>
+                    <button type="button" class="btn btn-link">Downvote ({{post[6]}}))</button>
                     <!-- <button type="button" class="btn btn-link">Follow</button> -->
                     
                   </div>

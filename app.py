@@ -238,7 +238,10 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        
+        length = min(len(content),100)
+        summary2 = content[0:length-1]
+        if "GPT" in request.form:
+            summary2 = askgpt(content)
         author = session['username']
         if not title:
             flash('Title is necessary')
@@ -246,7 +249,7 @@ def create():
         else:
             conn1 = get_db_connection2()
             conn = conn1.cursor()
-            conn.execute('INSERT INTO posts (title, content, author) VALUES (%s, %s, %s)', (title, content, author))
+            conn.execute('INSERT INTO posts (title, content, author,summary) VALUES (%s, %s, %s,%s)', (title, content, author,summary2))
             conn1.commit()
             conn1.close()
             return redirect('/')
@@ -397,6 +400,18 @@ def byauthor_light(username):
 @app.route('/trending_light')
 def trending_light():
     return render_template('trending_light.html')
+
+@app.route('/trending')
+def trending():
+    conn1 = get_db_connection2()
+    conn = conn1.cursor()
+    conn.execute('SELECT * FROM posts')
+    posts = list(conn.fetchall())
+    posts.sort(key = lambda x : x[5])
+    posts.reverse()
+    return render_template('trending.html', posts=posts)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
